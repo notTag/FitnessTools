@@ -106,53 +106,89 @@ function MacroCalculator() {
 
           <button
             onClick={calculateMacros}
-            className="w-full bg-snes-button hover:bg-[#69656A] text-white font-bold py-2 px-4 rounded"
+            className="w-full bg-snes-button hover:bg-snes-button-hover text-white font-bold py-2 px-4 rounded"
           >
             Calculate Macros
           </button>
 
           {macros.protein > 0 && (
             <div className="space-y-4 mt-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Protein: {macros.protein}g ({Math.round((macros.protein * 4 / parseFloat(calories)) * 100)}%)
-                </label>
+              <div className="flex items-center space-x-4">
                 <input
-                  type="range"
-                  value={macros.protein}
-                  min="0"
-                  max={parseFloat(weight) * 1.2}
-                  onChange={(e) => handleMacroChange('protein', parseInt(e.target.value))}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  type="radio"
+                  name="activeMacro"
+                  value="protein"
+                  checked={macros.protein !== 0}
+                  onChange={() => {}} // Empty handler since we're controlling this via slider
+                  className="w-4 h-4 text-snes-button"
                 />
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Protein: {macros.protein}g ({Math.round((macros.protein * 4 / parseFloat(calories)) * 100)}%)
+                  </label>
+                  <input
+                    type="range"
+                    value={macros.protein}
+                    min="0"
+                    max={parseFloat(weight) * 1.2}
+                    onChange={(e) => {
+                      handleMacroChange('protein', parseInt(e.target.value));
+                    }}
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  />
+                </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Fats: {macros.fats}g ({Math.round((macros.fats * 9 / parseFloat(calories)) * 100)}%)
-                </label>
+              <div className="flex items-center space-x-4">
                 <input
-                  type="range"
-                  value={macros.fats}
-                  min="0"
-                  max={Math.round(parseFloat(calories) / 9)}
-                  onChange={(e) => handleMacroChange('fats', parseInt(e.target.value))}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  type="radio"
+                  name="activeMacro"
+                  value="fats"
+                  checked={macros.fats !== 0}
+                  onChange={() => {}} // Empty handler since we're controlling this via slider
+                  className="w-4 h-4 text-snes-button"
                 />
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Fats: {macros.fats}g ({Math.round((macros.fats * 9 / parseFloat(calories)) * 100)}%)
+                  </label>
+                  <input
+                    type="range"
+                    value={macros.fats}
+                    min="0"
+                    max={Math.round(parseFloat(calories) / 9)}
+                    onChange={(e) => {
+                      handleMacroChange('fats', parseInt(e.target.value));
+                    }}
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  />
+                </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Carbs: {macros.carbs}g ({Math.round((macros.carbs * 4 / parseFloat(calories)) * 100)}%)
-                </label>
+              <div className="flex items-center space-x-4">
                 <input
-                  type="range"
-                  value={macros.carbs}
-                  min="0"
-                  max={Math.round(parseFloat(calories) / 4)}
-                  onChange={(e) => handleMacroChange('carbs', parseInt(e.target.value))}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  type="radio"
+                  name="activeMacro"
+                  value="carbs"
+                  checked={macros.carbs !== 0}
+                  onChange={() => {}} // Empty handler since we're controlling this via slider
+                  className="w-4 h-4 text-snes-button"
                 />
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Carbs: {macros.carbs}g ({Math.round((macros.carbs * 4 / parseFloat(calories)) * 100)}%)
+                  </label>
+                  <input
+                    type="range"
+                    value={macros.carbs}
+                    min="0"
+                    max={Math.round(parseFloat(calories) / 4)}
+                    onChange={(e) => {
+                      handleMacroChange('carbs', parseInt(e.target.value));
+                    }}
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  />
+                </div>
               </div>
             </div>
           )}
@@ -162,7 +198,7 @@ function MacroCalculator() {
       <div className="text-center mt-8">
         <button
           onClick={() => nav('/')}
-          className="bg-snes-button hover:bg-[#69656A] text-white font-bold py-2 px-4 rounded"
+          className="bg-snes-button hover:bg-snes-button-hover text-white font-bold py-2 px-4 rounded"
         >
           Back to Main Screen
         </button>
