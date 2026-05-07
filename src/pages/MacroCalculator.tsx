@@ -5,6 +5,7 @@ function MacroCalculator() {
   const nav = useNavigate();
   const [weight, setWeight] = useState('');
   const [calories, setCalories] = useState('');
+  const [activeMacro, setActiveMacro] = useState<'protein' | 'fats' | 'carbs'>('protein');
   const [macros, setMacros] = useState({
     protein: 0,
     fats: 0,
@@ -47,25 +48,33 @@ function MacroCalculator() {
     let newFats = macros.fats;
     let newCarbs = macros.carbs;
 
+    // Update the changed macro
     switch (macro) {
       case 'protein':
         newProtein = value;
-        // Maintain fat ratio, adjust carbs
-        const remainingAfterProtein = caloriesNum - (newProtein * 4);
-        newFats = Math.round((caloriesNum * 0.25) / 9);
-        newCarbs = Math.round((remainingAfterProtein - (newFats * 9)) / 4);
         break;
       case 'fats':
         newFats = value;
-        // Maintain protein, adjust carbs
-        const remainingAfterFat = caloriesNum - (newFats * 9);
-        newCarbs = Math.round((remainingAfterFat - (newProtein * 4)) / 4);
         break;
       case 'carbs':
         newCarbs = value;
-        // Maintain protein, adjust fats
-        const remainingAfterCarbs = caloriesNum - (newCarbs * 4);
-        newFats = Math.round((remainingAfterCarbs - (newProtein * 4)) / 9);
+        break;
+    }
+
+    // Adjust other macros based on which one is active (selected via radio)
+    switch (activeMacro) {
+      case 'protein':
+        // If protein is selected, maintain fats ratio and adjust carbs
+        newFats = Math.round((caloriesNum * 0.25) / 9);
+        newCarbs = Math.round((caloriesNum - (newProtein * 4) - (newFats * 9)) / 4);
+        break;
+      case 'fats':
+        // If fats is selected, maintain protein and adjust carbs
+        newCarbs = Math.round((caloriesNum - (newProtein * 4) - (newFats * 9)) / 4);
+        break;
+      case 'carbs':
+        // If carbs is selected, maintain protein and adjust fats
+        newFats = Math.round((caloriesNum - (newProtein * 4) - (newCarbs * 4)) / 9);
         break;
     }
 
@@ -118,8 +127,8 @@ function MacroCalculator() {
                   type="radio"
                   name="activeMacro"
                   value="protein"
-                  checked={macros.protein !== 0}
-                  onChange={() => {}} // Empty handler since we're controlling this via slider
+                  checked={activeMacro === 'protein'}
+                  onChange={() => setActiveMacro('protein')}
                   className="w-4 h-4 text-snes-button"
                 />
                 <div className="flex-1">
@@ -131,9 +140,7 @@ function MacroCalculator() {
                     value={macros.protein}
                     min="0"
                     max={parseFloat(weight) * 1.2}
-                    onChange={(e) => {
-                      handleMacroChange('protein', parseInt(e.target.value));
-                    }}
+                    onChange={(e) => handleMacroChange('protein', parseInt(e.target.value))}
                     className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                   />
                 </div>
@@ -144,8 +151,8 @@ function MacroCalculator() {
                   type="radio"
                   name="activeMacro"
                   value="fats"
-                  checked={macros.fats !== 0}
-                  onChange={() => {}} // Empty handler since we're controlling this via slider
+                  checked={activeMacro === 'fats'}
+                  onChange={() => setActiveMacro('fats')}
                   className="w-4 h-4 text-snes-button"
                 />
                 <div className="flex-1">
@@ -157,9 +164,7 @@ function MacroCalculator() {
                     value={macros.fats}
                     min="0"
                     max={Math.round(parseFloat(calories) / 9)}
-                    onChange={(e) => {
-                      handleMacroChange('fats', parseInt(e.target.value));
-                    }}
+                    onChange={(e) => handleMacroChange('fats', parseInt(e.target.value))}
                     className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                   />
                 </div>
@@ -170,8 +175,8 @@ function MacroCalculator() {
                   type="radio"
                   name="activeMacro"
                   value="carbs"
-                  checked={macros.carbs !== 0}
-                  onChange={() => {}} // Empty handler since we're controlling this via slider
+                  checked={activeMacro === 'carbs'}
+                  onChange={() => setActiveMacro('carbs')}
                   className="w-4 h-4 text-snes-button"
                 />
                 <div className="flex-1">
@@ -183,9 +188,7 @@ function MacroCalculator() {
                     value={macros.carbs}
                     min="0"
                     max={Math.round(parseFloat(calories) / 4)}
-                    onChange={(e) => {
-                      handleMacroChange('carbs', parseInt(e.target.value));
-                    }}
+                    onChange={(e) => handleMacroChange('carbs', parseInt(e.target.value))}
                     className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                   />
                 </div>
